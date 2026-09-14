@@ -18,6 +18,14 @@
   "devDependencies": {
     "nodemon": "^3.0.2"
   },
-  "keywords": ["bingo", "telegram", "mini-app", "multiplayer"],
-  "license": "MIT"
+  "keywords": [
+    "bingo",
+    "telegram",
+    "mini-app",
+    "multiplayer"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": "20.x"
+  }
 }
