@@ -8,7 +8,7 @@
     tg?.ready();
     tg?.expand();
     
-    const API = 'https://za-bingo-5a7e.onrender.com';
+    const API = 'https://zaza-production-6481.up.railway.app';
     
     // ── State ─────────────────────────────────────────────────────────────────────
     const state = {
