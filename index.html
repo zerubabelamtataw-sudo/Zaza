@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>Ethiopian Bingo — ቢንጎ</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+
+<link rel="stylesheet" href="style.css"/>
+</head>
+
+<body>
+
+<div id="maintenanceScreen" style="
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:999999;
+  background:#0f0f14;
+  color:white;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-family:Arial,sans-serif;
+">
+  <div>
+    <div style="font-size:60px;">🔧</div>
+    <h1>Under Maintenance</h1>
+    <p>እድል is currently undergoing maintenance.<br>Please check back soon.</p>
+  </div>
+</div>
+
+<div class="app">
+
+<!-- ── NEW HEADER ── -->
+<header class="new-header">
+
+  <button class="home-back-btn" onclick="window.location.href='https://zerubabelamtataw-sudo.github.io/Za-bingo/home.html'">
+  ← Back
+</button>
+
+  <div class="new-header-text">
+  <span>Select a Room</span>
+  <span>And JOIN 🔥</span>
+</div>
+
+  <div class="header-balance-area">
+
+  <div class="balance-badge" id="hudBalance">
+    0 Br
+  </div>
+
+  <div class="live-bingo">
+    <span class="live-dot"></span>
+    <span>LIVE</span>
+  </div>
+
+</div>
+  <nav class="nav-tabs" id="navTabs" style="display:none">
+  <button class="nav-tab" data-page="profile">Profile</button>
+  <button class="nav-tab active" data-page="lobby">Rooms</button>
+  <button class="nav-tab" data-page="bonus">BONUS</button>
+  <button class="nav-tab" data-page="history">History</button>
+  <button class="nav-tab" data-page="info">Info</button>
+</nav>
+<nav class="nav-tabs" id="navTabs" style="display:none">
+</nav>
+
+<div class="player-hud" id="playerHud" style="display:none">
+  <span class="player-name-badge" id="hudName"></span>
+</div>
+</header>
+
+<!-- ── LOBBY / ROOMS PAGE ── -->
+<div class="page active" id="page-lobby">
+
+  <div class="rooms-section">
+
+  
+
+
+    <!-- COMPACT ANNOUNCEMENT -->
+    <section class="lobby-announcement">
+
+      <div class="announcement-slider">
+
+        <div class="announcement-slide">
+          <span class="announcement-icon">🎁</span>
+          <div>
+            <strong>Referral Bonus</strong>
+            <small>Invite friends and earn 20 Br</small>
+          </div>
+        </div>
+
+        <div class="announcement-slide">
+          <span class="announcement-icon">💰</span>
+          <div>
+            <strong>Deposit Bonus</strong>
+            <small>Deposit 50+ Br and get another 20 Br</small>
+          </div>
+        </div>
+
+        <div class="announcement-slide">
+          <span class="announcement-icon">🏆</span>
+          <div>
+            <strong>Earn Up To 40 Br</strong>
+            <small>From one successful referral</small>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="announcement-dots">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+    </section>
+
+
+    <!-- ROOM HEADING -->
+    <div class="rooms-heading">
+
+      <div class="rooms-heading-left">
+        <span class="rooms-heading-label">BINGO ROOMS</span>
+        <h2>Choose Your Room</h2>
+        <p>Select a room and start playing</p>
+      </div>
+
+      <div class="rooms-live-indicator">
+        <span class="live-dot"></span>
+        LIVE
+      </div>
+
+    </div>
+
+
+    <!-- IMPORTANT:
+         app.js will generate the real room cards here -->
+    <div class="room-cards" id="roomCards">
+      <div class="spinner"></div>
+    </div>
+
+  </div>
+
+</div>
+<!-- END LOBBY / ROOMS PAGE -->
+
+<!-- ── BONUS & TOURNAMENT PAGE ── -->
+<div class="page" id="page-bonus">
+
+  <div class="bonus-page">
+
+    <div class="bonus-container">
+
+      <div class="bonus-title">
+        👑 ቦነስ 👑
+      </div>
+
+      <div class="bonus-subtitle">
+        ይጫወቱ እለታዊ  ሽልማቶችን ይሸለሙ
+      </div>
+
+      <!-- DAILY / WEEKLY -->
+      <div class="bonus-tabs">
+
+        <button
+          class="bonus-tab active"
+          data-bonus-type="daily"
+        >
+          DAILY
+        </button>
+
+      </div>
+
+      <!-- BONUS CONTENT -->
+      <div
+        class="bonus-card"
+        id="bonusCard"
+      ></div>
+
+      <!-- LEADERBOARD -->
+<div class="tournament-section">
+
+  <div class="tournament-title">
+    🏆 LEADERBOARD
+  </div>
+
+  <div class="tournament-card">
+
+    <div class="tournament-live">
+      <span class="live-dot"></span>
+      LIVE
+    </div>
+
+    <div
+      class="tournament-player-count"
+      id="tournamentPlayerCount"
+    >
+      0 PLAYERS
+    </div>
+
+    <div
+      class="tournament-leaderboard"
+      id="tournamentLeaderboard"
+    >
+      <!-- Leaderboard appears here -->
+    </div>
+
+  </div>
+
+</div>
+
+    </div>
+
+  </div>
+
+</div>
+<!-- END BONUS & TOURNAMENT PAGE -->
+
+<!-- ── CARTELA SELECTION PAGE ── --><div class="page" id="page-cartelas">  <button class="btn btn-outline" id="backToRoomsBtn">
+    Back
+  </button> 
+  <div class="cartela-status-bar">
+  <div>
+    <span>Players</span>
+    <strong id="cartelaPlayers">0</strong>
+  </div>
+
+  <div>
+    <span>Pot</span>
+    <strong id="cartelaPot">0 Br</strong>
+  </div>
+
+  <div>
+    <span>Countdown</span>
+    <strong id="cartelaCountdown">—</strong>
+  </div>
+</div>
+  <div class="cartela-section"><div class="cartela-picker-header">
+
+  <span
+    id="cartelaCountLabel"
+    style="color:var(--muted);font-size:.85rem"
+  >
+    Max 4
+  </span>
+
+</div>
+
+<div class="cartela-grid" id="cartelaGrid">
+  <div class="spinner"></div>
+</div>
+<div id="selectedCartelaPreview"></div>
+<div class="join-bar">
+
+  <span class="selected-count" id="selectedCount">
+    0 cartelas selected
+  </span>
+
+  <button
+    class="btn btn-gold"
+    id="joinBtn"
+    disabled
+  >
+    Join Room →
+  </button>
+
+</div>
+
+  </div></div>
+<!-- END CARTELA PAGE --><!-- ── GAME PAGE ── --><div class="page" id="page-game"> 
+<div class="game-container">
+  <!-- ── GAME START OVERLAY ── -->
+<div class="game-start-overlay" id="gameStartOverlay">
+  <img
+    src="assets/game-start.png"
+    alt="Game Started"
+    class="game-start-image"
+  >
+</div>
+
+  <!-- GAME INFO -->
+  <div class="game-status-bar" id="gameStatusBar">
+
+  <div class="game-info-chip">
+    <div class="game-info-label">Room</div>
+    <div class="game-info-value" id="infoRoomName">—</div>
+  </div>
+
+  <div class="game-info-chip">
+    <div class="game-info-label">Status</div>
+    <div class="game-info-value" id="infoStatus">—</div>
+  </div>
+
+  <div class="game-info-chip">
+    <div class="game-info-label">Pot</div>
+    <div class="game-info-value" id="infoPot">0 Br</div>
+  </div>
+
+  <div class="game-info-chip">
+    <div class="game-info-label">Players</div>
+    <div class="game-info-value" id="infoPlayers">0</div>
+  </div>
+
+  <div class="game-info-chip">
+    <div class="game-info-label">Numbers</div>
+    <div class="game-info-value" id="infoCalled">0/75</div>
+  </div>
+
+  
+
+
+</div>
+<div class="game-layout">
+  <!-- Left: called numbers board -->
+<div class="game-left">
+
+  <div class="called-board">
+
+  
+
+  <div class="called-board-content">
+
+  <div
+  class="last-called"
+  id="lastCalledWrap"
+>
+    <div class="last-called-label">
+      CURRENT
+    </div>
+
+    <div
+      class="last-called-number"
+      id="lastCalledNum"
+    >
+      —
+    </div>
+
+    <div
+      class="last-called-history"
+      id="lastCalledHistory"
+    >
+    </div>
+  </div>
+
+  <div
+    class="called-numbers-grid"
+    id="calledGrid"
+  >
+      <!-- 75 cells injected by JS -->
+    </div>
+ <div class="game-controls">
+  <button id="soundToggleBtn" onclick="toggleSound()">
+    🔊 SOUND: ON
+  </button>
+
+  <button id="autoMarkBtn" onclick="toggleAutoMark()">
+    MARK: OFF
+  </button>
+</div>
+</div>
+
+</div>
+
+</div>
+
+<!-- Right: status + my cartelas -->
+<div class="game-right">
+<div class="bingo-partition">
+  <div class="bingo-part B">B</div>
+  <div class="bingo-part I">I</div>
+  <div class="bingo-part N">N</div>
+  <div class="bingo-part G">G</div>
+  <div class="bingo-part O">O</div>
+</div>
+  <div
+    class="players-list"
+    id="gamePlayersList"
+  ></div>
+
+
+  <div class="my-cartelas" id="myCartelas">
+
+      <div class="empty-state">
+        <div class="icon">🎴</div>
+        <div>
+          Join a room to see your cartelas
+        </div>
+      </div>
+
+        </div>
+<button class="cancel-countdown-btn" id="leaveGameBtn">
+  Leave Game
+</button>
+  </div>
+
+</div>
+</div>
+
+</div>
+<!-- END GAME PAGE -->
+
+<!-- ── PROFILE PAGE ── -->
+<div class="page" id="page-profile">
+
+  <div class="profile-grid">
+
+    <!-- Profile Header -->
+    <div class="profile-card">
+
+      <div class="profile-avatar" id="profileAvatar">
+        😀
+      </div>
+
+      <div class="profile-username" id="profileName">
+        —
+      </div>
+
+      <div class="profile-balance-label">
+        Balance
+      </div>
+
+      <div class="profile-balance" id="profileBalance">
+        0 Br
+      </div>
+
+    </div>
+
+
+    <!-- Player Information -->
+    <div class="profile-card">
+
+      <div class="profile-info-row">
+        <span>Player Name</span>
+        <strong id="playerName">—</strong>
+      </div>
+
+      <div class="profile-info-row">
+        <span>Player ID</span>
+        <strong id="playerId">—</strong>
+      </div>
+
+      <div class="profile-info-row">
+        <span>Phone Number</span>
+        <strong id="playerPhone">—</strong>
+      </div>
+
+      <div class="profile-info-row">
+        <span>Username</span>
+        <strong id="playerUsername">—</strong>
+      </div>
+
+      <div class="profile-info-row">
+        <span>Balance</span>
+        <strong id="playerBalance">0 Br</strong>
+      </div>
+
+      <div class="profile-info-row">
+        <span>Games Played</span>
+        <strong id="gamesPlayed">0</strong>
+      </div>
+
+      <div class="profile-info-row">
+        <span>Games Won</span>
+        <strong id="gamesWon">0</strong>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+   
+<!-- END PROFILE PAGE -->
+<!-- ── INFO PAGE ── -->
+<div class="page" id="page-info">
+
+  <div class="info-screen">
+
+<!-- INFO HEADER -->
+<div class="info-header">
+  <div class="info-header-title">
+    የጨዋታ መረጃ
+  </div>
+</div>
+
+<!-- INFO CONTENT -->
+<div class="info-content">
+
+  <!-- WELCOME -->
+  <div class="info-card">
+
+    <div class="info-card-title">
+      ሰላም
+    </div>
+
+    <div class="info-card-text">
+      እንኳን ወደ እድል BINGO በደህና መጡ።
+      ክፍል ይምረጡ፣ ካርቴላዎን ይምረጡ፣
+      ወደ ጨዋታው ይቀላቀሉ፣
+      ለማሸነፍ ይጫወቱ።
+      በ አንድ ጨዋታ መየዝ ሚቻለው 1 -4 ካርቴላ ነው።
+    </div>
+
+  </div>
+
+  <!-- CUSTOMER SUPPORT -->
+  <div class="info-card">
+
+    <div class="info-card-title">
+      💬 የደንበኛ ድጋፍ
+    </div>
+
+    <div class="info-card-text">
+      ችግር ካጋጠመዎት ወይም ሀሳብ ማቅረብ ከፈለጉ
+      የእድል Bingo የድጋፍ ቡድናችንን ይጎብኙ።
+    </div>
+
+    <a
+      href="https://t.me/Edellsupport_bot"
+      target="_blank"
+      class="support-button"
+    >
+      💬 የድጋፍ ቡድን ይጎብኙ
+    </a>
+
+  </div>
+
+</div>
+
+
+      <!-- DEPOSIT & WITHDRAW -->
+<div class="info-card">
+
+  <div class="info-card-title">
+    💰 ገንዘብ ማስገባት እና ማውጣት
+  </div>
+
+  <div class="info-card-text">
+
+    💰 ገንዘብ ለማስገባት እና ለማውጣት
+    እባክዎ የ <strong>እድል Bingo Bot</strong> ይጠቀሙ።
+
+    <br><br>
+
+    📱 <strong>ስልክ:</strong>Telebirr,cbe birr ይጠቀሙ
+
+    <br><br>
+
+    ⏰ <strong>ገንዘብ ማውጣት የሚቻለው
+    ከጠዋቱ 3:00 እስከ ማታ 3:00
+    ድረስ ብቻ ነው።</strong>
+
+    <br><br>
+
+    🤖 ሁሉንም የገንዘብ ማስገባትና
+    ማውጣት ጥያቄዎች በ <strong>Bot</strong>
+    በኩል ብቻ ያቅርቡ።
+
+  </div>
+
+</div>
+
+
+      <!-- HOW TO PLAY -->
+      <div class="info-card">
+
+        <div class="info-card-title">
+          እንዴት መጫወት እንደሚቻል
+        </div>
+
+        <div class="info-rule">
+          <div class="info-number">1</div>
+          <div class="info-rule-text">
+            ክፍል ይምረጡ።
+          </div>
+        </div>
+
+        <div class="info-rule">
+          <div class="info-number">2</div>
+          <div class="info-rule-text">
+            ካርቴላዎን ይምረጡ።
+          </div>
+        </div>
+
+        <div class="info-rule">
+          <div class="info-number">3</div>
+          <div class="info-rule-text">
+            ወደ ጨዋታው ይቀላቀሉ።
+          </div>
+        </div>
+
+        <div class="info-rule">
+          <div class="info-number">4</div>
+          <div class="info-rule-text">
+            የሚጠሩትን ቁጥሮች ይመልከቱ
+            እና በካርቴላዎ ላይ ምልክት ያድርጉ።
+          </div>
+        </div>
+
+        <div class="info-rule">
+          <div class="info-number">5</div>
+          <div class="info-rule-text">
+            የሚያሸንፍ ቅርጽ ሲሞላ Bingo ይጫኑ።
+          </div>
+        </div>
+
+      </div>
+
+
+      <!-- WINNING RULES -->
+      <div class="info-card">
+
+        <div class="info-card-title">
+          ህጎች
+        </div>
+
+        <div class="info-card-text">
+          የካርቴላ የማሸነፊያ ህጎች
+
+          <br><br>
+
+          • ረድፍ — አንድ ሙሉ አግድም መስመር ሲሞላ።
+
+          <br><br>
+
+          • አግድም — አንድ ሙሉ ቁልቁል መስመር ሲሞላ።
+
+          <br><br>
+
+          • ዲያጎናል — ከጥግ ወደ ጥግ
+          የሚሄድ ሰያፍ መስመር ሲሞላ።
+
+          <br><br>
+
+          • አራቱ ማዕዘን — የካርቴላው
+          አራቱ ጥጎች ሲሞሉ።
+        </div>
+
+      </div>
+
+
+      <!-- PRIZE -->
+      <div class="info-card">
+
+        <div class="info-card-title">
+          ሽልማት
+        </div>
+
+        <div class="info-card-text">
+          የሽልማቱ መጠን በጨዋታው ውስጥ
+          በሚሳተፉት ተጫዋቾች ብዛት
+          የሚወሰን ይሆናል።
+        </div>
+
+      </div>
+
+
+      <!-- VERSION -->
+      <div class="info-version">
+        እድል Bingo • 2026
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+<!-- END INFO PAGE -->
+
+<!-- ── HISTORY PAGE ── --><div class="page" id="page-history">  <div class="history-table"><table>
+
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Room</th>
+      <th>Amount</th>
+      <th>Date</th>
+    </tr>
+  </thead>
+
+  <tbody id="historyPageBody">
+
+    <tr>
+
+      <td
+        colspan="4"
+        style="text-align:center;padding:32px;color:var(--muted)"
+      >
+        No history yet
+      </td>
+
+    </tr>
+
+  </tbody>
+
+</table>
+
+  </div></div>
+<!-- ── HISTORY PAGE ── -->
+</div>
+<!-- END .app -->
+
+
+<!-- ── WINNER OVERLAY ── -->
+<div class="overlay" id="winnerOverlay">
+
+  <div class="winner-popup">
+
+    <div class="winner-crown">
+      🏆
+    </div>
+
+    <div class="winner-title">
+      BINGO!
+    </div>
+
+    <div class="winner-name" id="popupWinnerName">
+      Winner
+    </div>
+
+    <div class="winner-detail" id="popupCartelaDetail">
+      Cartela
+    </div>
+
+    <div class="winner-cartela">
+
+      <div class="winner-cartela-header">
+        <span>B</span>
+        <span>I</span>
+        <span>N</span>
+        <span>G</span>
+        <span>O</span>
+      </div>
+
+      <div
+        class="winner-cartela-grid"
+        id="winnerCartelaGrid"
+      ></div>
+
+    </div>
+
+    <div class="winner-amount" id="popupAmount">
+      +0 Br
+    </div>
+
+    <div class="winner-sub">
+      🎉 WINNER! 🎉
+    </div>
+
+  </div>
+
+</div>
+
+
+
+
+<!-- ── TOAST ── -->
+<div
+  class="toast-container"
+  id="toastContainer"
+></div>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script>
+const maintenanceFirebaseConfig = {
+  apiKey: "AIzaSyCMfDNAWQtrJGijQLUC5KQWi5hVTgEvJTo",
+  authDomain: "zabingo-d2ed5.firebaseapp.com",
+  databaseURL: "https://zabingo-d2ed5-default-rtdb.firebaseio.com/",
+  projectId: "zabingo-d2ed5",
+  storageBucket: "zabingo-d2ed5.firebasestorage.app",
+  messagingSenderId: "75991744418",
+  appId: "1:75991744418:web:70afa1b06418ddc50ffcfb"
+};
+
+firebase.initializeApp(maintenanceFirebaseConfig);
+
+const maintenanceDB = firebase.database();
+
+maintenanceDB.ref('maintenance/enabled').on('value', snapshot => {
+  const maintenanceOn = snapshot.val() === true;
+  const screen = document.getElementById('maintenanceScreen');
+
+  if (screen) {
+    screen.style.display = maintenanceOn ? 'flex' : 'none';
+  }
+
+  document.body.style.overflow = maintenanceOn ? 'hidden' : '';
+});
+</script>
+
+<script src="app.js"></script>
+
+</body>
+</html> 

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>እድል - Maintenance</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top, #24242f 0%, #111118 42%, #09090e 100%);
+      color: #fff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .maintenance-page {
+      width: 100%;
+      max-width: 430px;
+      text-align: center;
+    }
+
+    /* LOGO */
+    .logo {
+      font-size: 42px;
+      font-weight: 900;
+      color: #f5c842;
+      letter-spacing: 1px;
+      text-shadow:
+        0 0 10px rgba(245, 200, 66, .25),
+        0 0 25px rgba(245, 200, 66, .12);
+      margin-bottom: 38px;
+    }
+
+    .logo span {
+      display: block;
+      margin-top: -3px;
+      font-size: 10px;
+      letter-spacing: 4px;
+      color: #888892;
+      font-weight: 700;
+    }
+
+    /* MAIN CARD */
+    .maintenance-card {
+      background: linear-gradient(145deg, #1b1b25, #101018);
+      border: 1px solid #2d2d38;
+      border-radius: 28px;
+      padding: 38px 25px 32px;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.04),
+        0 18px 45px rgba(0,0,0,.35);
+    }
+
+    /* ICON */
+    .maintenance-icon {
+      width: 86px;
+      height: 86px;
+      margin: 0 auto 25px;
+      border-radius: 26px;
+      background: rgba(245, 200, 66, .10);
+      border: 1px solid rgba(245, 200, 66, .25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 42px;
+      box-shadow:
+        0 0 25px rgba(245, 200, 66, .08);
+    }
+
+    h1 {
+      font-size: 25px;
+      font-weight: 900;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+
+    .message {
+      color: #9b9ba6;
+      font-size: 14px;
+      line-height: 1.7;
+      max-width: 330px;
+      margin: 0 auto;
+    }
+
+    /* STATUS */
+    .status {
+      margin: 27px auto 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 15px;
+      border-radius: 30px;
+      background: rgba(245, 200, 66, .08);
+      border: 1px solid rgba(245, 200, 66, .20);
+      color: #f5c842;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .7px;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #f5c842;
+      box-shadow: 0 0 8px rgba(245, 200, 66, .7);
+    }
+
+    /* FOOTER */
+    .footer {
+      margin-top: 25px;
+      color: #62626d;
+      font-size: 10px;
+      letter-spacing: .5px;
+    }
+
+    .footer strong {
+      color: #858591;
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="maintenance-page">
+
+    <div class="logo">
+      እድል
+      <span>GAMES</span>
+    </div>
+
+    <section class="maintenance-card">
+
+      <div class="maintenance-icon">
+        🔧
+      </div>
+
+      <h1>Under Maintenance</h1>
+
+      <p class="message">
+        እድል is currently undergoing maintenance.
+        We are working to improve your experience.
+        Please check back soon.
+      </p>
+
+      <div class="status">
+        <span class="status-dot"></span>
+        SYSTEM MAINTENANCE
+      </div>
+
+    </section>
+
+    <div class="footer">
+      <strong>እድል</strong> • Play. Enjoy. Win.
+    </div>
+
+  </main>
+
+</body>
+</html>

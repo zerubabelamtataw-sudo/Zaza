@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>እድል Home</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #0b0b12;
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 520px;
+      margin: auto;
+      min-height: 100vh;
+      padding: 18px 16px 30px;
+    }
+
+    .header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: #f5c842;
+  letter-spacing: 2px;
+  text-shadow: 0 0 20px rgba(245,200,66,.4);
+}
+
+.logo span {
+  color: #ffffff;
+  font-size: .75rem;
+  display: block;
+  letter-spacing: 4px;
+  font-weight: 400;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.live-bingo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  background: linear-gradient(135deg, #1f2937, #111827);
+  border: 1px solid var(--gold-dim);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-family: var(--font-display);
+  font-size: .60rem;
+  font-weight: 900;
+  letter-spacing: .8px;
+  line-height: 1;
+  color: var(--gold);
+}
+
+.live-dot {
+  width: 7px;
+  height: 7px;
+  min-width: 7px;
+  border-radius: 50%;
+  background: #ff0000;
+  box-shadow: 0 0 5px rgba(255, 0, 0, .7);
+  animation: livePulse 1.2s ease-in-out infinite;
+}
+
+    /* BALANCE */
+    .balance-card {
+      background: linear-gradient(135deg, #171720, #111119);
+      border: 1px solid #292933;
+      border-radius: 22px;
+      padding: 18px;
+      margin-bottom: 10px;
+    }
+
+    .balance-label {
+      color: #8e8e9a;
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .balance {
+      font-size: 29px;
+      font-weight: 900;
+    }
+
+    .currency {
+      color: #ffb300;
+      font-size: 15px;
+      margin-left: 3px;
+    }
+    .balance-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.bonus-box {
+  text-align: right;
+}
+
+.bonus-balance {
+  font-size: 20px;
+  font-weight: 900;
+  color: #ffb300;
+}
+
+    /* SECTION TITLE */
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 13px;
+  margin-top: 10px;
+}
+
+.section-title h2 {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.section-title span {
+  color: #f5c842;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-shadow: 0 0 10px rgba(245, 200, 66, 0.35);
+}
+
+    /* GAME CARDS */
+    .games {
+      display: grid;
+      gap: 14px;
+    }
+
+  .game-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 155px;
+  border-radius: 24px;
+  padding: 20px;
+  border: 1px solid #30303b;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+  width: 100%;
+  text-align: left;
+  color: inherit;
+  font-family: inherit;
+  
+}
+
+    .game-card:active {
+      transform: scale(0.97);
+    }
+
+    .bingo {
+  background:
+    radial-gradient(circle at 90% 10%, rgba(255,255,255,.65), transparent 35%),
+    linear-gradient(135deg, #dcc7ee 0%, #c9b0e8 50%, #b795dc 100%);
+}
+
+    .numbers {
+      background:
+        radial-gradient(circle at 90% 10%, rgba(80, 150, 255, 0.25), transparent 35%),
+        linear-gradient(135deg, #101a2a, #11141c);
+    }
+
+    .game-icon {
+      font-size: 34px;
+      margin-bottom: 9px;
+    }
+
+    .game-card h3 {
+      font-size: 22px;
+      margin-bottom: 5px;
+    }
+
+    .game-card p {
+      color: #aaaab5;
+      font-size: 12px;
+      margin-bottom: 15px;
+    }
+    .bingo h3 {
+  color: #000000;
+}
+
+.bingo p {
+  color: #000000;
+}
+
+    .play-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 14px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 800;
+      background: #fff;
+      color: #111;
+    }
+
+    .bingo .play-btn {
+      background: #ffb300;
+    }
+
+    .numbers .play-btn {
+      background: #4d9cff;
+      color: #000;
+    }
+
+    /* ANNOUNCEMENT */
+    .announcement {
+      margin-top: 25px;
+      margin-bottom: 25px;
+      padding: 15px 17px;
+      border-radius: 17px;
+      background: #15151e;
+      border: 1px solid #292934;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .announcement-icon {
+      font-size: 22px;
+    }
+
+    .announcement-text {
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .announcement-text strong {
+      display: block;
+      font-size: 12px;
+      margin-bottom: 3px;
+    }
+
+    .announcement-text p {
+      color: #92929d;
+      font-size: 11px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* PLAYER ACTION BUTTONS */
+.quick-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.quick-btn {
+  min-height: 72px;
+  border-radius: 19px;
+  border: 1px solid #2d2d38;
+  background: linear-gradient(145deg, #1b1b25, #111119);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px;
+  text-align: left;
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.04),
+    0 5px 15px rgba(0,0,0,.18);
+}
+
+.quick-btn:active {
+  transform: scale(0.97);
+}
+
+.quick-btn .quick-icon {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+}
+
+.quick-btn strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.quick-btn span {
+  display: block;
+  color: #858591;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+/* DEPOSIT */
+.deposit-btn {
+  border-color: rgba(245, 200, 66, .30);
+}
+
+.deposit-btn .quick-icon {
+  background: rgba(245, 200, 66, .12);
+  box-shadow: 0 0 12px rgba(245, 200, 66, .08);
+}
+
+.deposit-btn strong {
+  color: #22c55e;
+}
+
+/* WITHDRAW */
+.withdraw-btn {
+  border-color: rgba(255, 95, 95, .25);
+}
+
+.withdraw-btn .quick-icon {
+  background: rgba(255, 95, 95, .10);
+}
+
+.withdraw-btn strong {
+  color: #ff8b8b;
+}
+   /* WALLET */
+#walletScreen {
+  background: linear-gradient(145deg, #171720, #101018);
+  border: 1px solid #292933;
+  border-radius: 24px;
+  padding: 20px;
+  margin-top: 5px;
+}
+
+#walletScreen h2 {
+  font-size: 24px;
+  margin-bottom: 18px;
+}
+
+.wallet-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+  margin-bottom: 22px;
+}
+
+.wallet-tabs button {
+  border: 1px solid #30303b;
+  border-radius: 14px;
+  padding: 13px;
+  background: #20202b;
+  color: white;
+  font-size: 14px;
+  font-weight: 800;
+}
+    .wallet-tabs button.active {
+  background: #f5c842;
+  border-color: #f5c842;
+  color: #111;
+}
+    .wallet-tabs button.active {
+  background: #f5c842;
+  border-color: #f5c842;
+  color: #111;
+}
+
+#depositSection h3,
+#withdrawSection h3 {
+  font-size: 14px;
+  margin: 18px 0 10px;
+  color: #f5c842;
+}
+
+.payment-number {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #111119;
+  border: 1px solid #2d2d38;
+  border-radius: 15px;
+  padding: 13px;
+  margin-bottom: 9px;
+}
+
+.payment-number span {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.payment-number button {
+  border: 0;
+  border-radius: 10px;
+  padding: 8px 11px;
+  background: #f5c842;
+  color: #111;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+#depositSms {
+  width: 100%;
+  min-height: 110px;
+  resize: none;
+  border: 1px solid #30303b;
+  border-radius: 15px;
+  background: #111119;
+  color: white;
+  padding: 13px;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  outline: none;
+  margin-bottom: 12px;
+}
+
+#depositSms::placeholder {
+  color: #777784;
+}
+
+.submit-deposit,
+#depositSection > button {
+  width: 100%;
+  border: 0;
+  border-radius: 15px;
+  padding: 14px;
+  background: #f5c842;
+  color: #111;
+  font-size: 14px;
+  font-weight: 900;
+} 
+    .payment-methods {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.payment-method {
+  min-width: 0;
+}
+
+.payment-method h3 {
+  margin-top: 0 !important;
+}
+
+.payment-method .payment-number {
+  display: block;
+  padding: 12px;
+}
+
+.payment-method .payment-number span {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 9px;
+  white-space: nowrap;
+}
+
+.payment-method .payment-number button {
+  width: 100%;
+}
+  .withdraw-methods {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 12px 0 15px;
+}
+
+.withdraw-method {
+  border: 1px solid #30303b;
+  border-radius: 13px;
+  padding: 12px 5px;
+  background: #111119;
+  color: #858591;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.withdraw-method.active {
+  background: #f5c842;
+  border-color: #f5c842;
+  color: #111;
+}
+
+.withdraw-input {
+  width: 100%;
+  border: 1px solid #30303b;
+  border-radius: 14px;
+  background: #111119;
+  color: white;
+  padding: 14px;
+  font-size: 14px;
+  outline: none;
+  margin-bottom: 12px;
+}
+
+.withdraw-input::placeholder {
+  color: #777784;
+}
+
+.withdraw-submit {
+  width: 100%;
+  border: 0;
+  border-radius: 15px;
+  padding: 14px;
+  background: #f5c842;
+  color: #111;
+  font-size: 14px;
+  font-weight: 900;
+}  
+  </style>
+  <script>
+const firebaseConfig = {
+  apiKey: "AIzaSyCMfDNAWQtrJGijQLUC5KQWi5hVTgEvJTo",
+  authDomain: "zabingo-d2ed5.firebaseapp.com",
+  databaseURL: "https://zabingo-d2ed5-default-rtdb.firebaseio.com/",
+  projectId: "zabingo-d2ed5",
+  storageBucket: "zabingo-d2ed5.firebasestorage.app",
+  messagingSenderId: "75991744418",
+  appId: "1:75991744418:web:70afa1b06418ddc50ffcfb"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+</script>
+</head>
+
+<body>
+
+  <div class="app">
+
+    <!-- HEADER -->
+<header class="header">
+
+  <div class="brand">
+
+    <div class="logo">
+      እድል
+      <span>Games</span>
+    </div>
+
+    <div class="brand-text">
+      <p>🅆🄴🄻🄲🄾🄼🄴</p>
+    </div>
+
+  </div>
+
+  <div class="header-right">
+
+    <div class="live-bingo">
+      <span class="live-dot"></span>
+      <span>LIVE</span>
+    </div>
+
+    <button class="profile-btn">👤</button>
+
+  </div>
+
+</header>
+
+
+    <!-- BALANCE -->
+<section class="balance-card">
+
+  <div class="balance-row">
+
+    <div>
+      <div class="balance-label">
+        YOUR BALANCE
+      </div>
+
+      <div class="balance" id="homeBalance">
+        0.00 <span class="currency">Br</span>
+      </div>
+    </div>
+
+    <div class="bonus-box">
+      <div class="balance-label">
+        BONUS BALANCE
+      </div>
+
+      <div class="bonus-balance" id="homeBonusBalance">
+        0.00 <span class="currency">Br</span>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+    <!-- QUICK ACTIONS -->
+    
+
+
+    <section class="quick-actions">
+
+      <button class="quick-btn deposit-btn" onclick="openWallet()">
+
+  <div class="quick-icon">
+    💰
+  </div>
+
+  <div>
+    <strong>Wallet</strong>
+    <span>Add money</span>
+  </div>
+
+</button>
+
+
+      <button class="quick-btn withdraw-btn" onclick="openProfile()">
+
+  <div class="quick-icon">
+    🧙‍♂️
+  </div>
+
+  <div>
+    <strong>Profile</strong>
+    <span>◈</span>
+  </div>
+
+</button>
+     </section>
+
+    <!-- GAMES -->
+    <div class="section-title">
+
+      <h2></h2>
+
+      <span>የጫወቱ ይሸለሙ</span>
+
+    </div>
+
+
+    <section class="games">
+
+      <!-- BINGO -->
+      <button class="game-card bingo" onclick="window.location.href='index.html'">
+
+  <div class="game-icon">🅞</div>
+
+  <h3>እድል Bingo</h3>
+
+  <p>
+     ባለ 5,10,15 የጨዋታ ክፍሎች
+  </p>
+
+</button>
+
+
+      <!-- NUMBERS -->
+      <div class="game-card numbers">
+
+        <div class="game-icon">🔢</div>
+
+        <h3>እድል Numbers</h3>
+
+        <p>
+          Pick your numbers and try your luck.
+        </p>
+
+        <div class="play-btn">
+          PLAY NUMBERS →
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ANNOUNCEMENT -->
+    <section class="announcement">
+
+      <div class="announcement-icon">
+        📢
+      </div>
+
+      <div class="announcement-text">
+
+        <strong>ANNOUNCEMENT</strong>
+
+        <p>
+          🔥 New games and rewards are available!
+        </p>
+
+      </div>
+
+    </section>
+    <!-- WALLET SCREEN -->
+<section id="walletScreen" style="display:none;">
+
+  <h2>Wallet</h2>
+
+  <div class="wallet-tabs">
+    <button class="active" onclick="showDeposit()">💰 Deposit</button>
+    <button onclick="showWithdraw()">💸 Withdraw</button>
+  </div>
+
+  <div id="depositSection">
+
+    <div class="payment-methods">
+
+  <div class="payment-method">
+    <h3>Telebirr</h3>
+
+    <div class="payment-number">
+      <span>0985 661720</span>
+      <button onclick="copyNumber('0985661720')">COPY</button>
+    </div>
+
+    <div class="payment-number">
+      <span>0949 402907</span>
+      <button onclick="copyNumber('0949402907')">COPY</button>
+    </div>
+  </div>
+
+  <div class="payment-method">
+    <h3>CBE Birr</h3>
+
+    <div class="payment-number">
+      <span>0985 661720</span>
+      <button onclick="copyNumber('0985661720')">COPY</button>
+    </div>
+
+    <div class="payment-number">
+      <span>0949 402907</span>
+      <button onclick="copyNumber('0949402907')">COPY</button>
+    </div>
+  </div>
+
+</div>
+
+    <h3>Paste Payment SMS</h3>
+
+    <textarea id="depositSms" placeholder="Paste your payment SMS here..."></textarea>
+
+    <button onclick="submitDeposit()">SUBMIT</button>
+
+  </div>
+
+<div id="withdrawSection" style="display:none;">
+
+  <h3>Withdraw</h3>
+
+  <div class="withdraw-methods">
+
+    <button type="button" class="withdraw-method active" onclick="selectWithdrawMethod(this)">
+      CBE Birr
+    </button>
+
+    <button type="button" class="withdraw-method" onclick="selectWithdrawMethod(this)">
+      Telebirr
+    </button>
+
+    <button type="button" class="withdraw-method" onclick="selectWithdrawMethod(this)">
+      CBE
+    </button>
+
+  </div>
+
+  <div class="withdraw-fields">
+
+  <input
+    type="text"
+    id="withdrawAccount"
+    class="withdraw-input"
+    placeholder="Enter account number"
+    inputmode="numeric"
+  >
+
+  <input
+    type="number"
+    id="withdrawAmount"
+    class="withdraw-input"
+    placeholder="Enter amount"
+    inputmode="decimal"
+    min="50"
+  >
+
+</div>
+
+  <button class="withdraw-submit" onclick="submitWithdrawal()">
+    SUBMIT
+  </button>
+
+</div>
+
+</section>
+    <button class="quick-btn support-btn">
+  <div class="quick-icon">
+    🎧
+  </div>
+  Support
+</button>
+
+
+    
+
+  </div>
+  <script>
+db.ref('maintenance/enabled').on('value', (snapshot) => {
+  if (snapshot.val() === true) {
+    window.location.href = 'maintenance.html';
+  }
+});
+</script>
+<script>
+
+const tg = window.Telegram.WebApp;
+tg.ready();
+tg.expand();
+
+const telegramUser = tg.initDataUnsafe?.user;
+
+if (telegramUser) {
+  const playerId = String(telegramUser.id);
+
+  db.ref(`players/${playerId}`).on('value', (snapshot) => {
+  const player = snapshot.val() || {};
+    window.currentPlayer = player;
+window.telegramUser = telegramUser;
+
+  const balance = Number(player.balance || 0);
+window.playerBalance = balance;
+  const bonusBalance = Number(player.referralBonusBalance || 0);
+
+  document.getElementById('homeBalance').innerHTML =
+    `${balance.toFixed(2)} <span class="currency">Br</span>`;
+
+  document.getElementById('homeBonusBalance').textContent =
+    bonusBalance.toFixed(2);
+});
+}
+  function openWallet() {
+  document.querySelector('.balance-card').style.display = 'none';
+  document.querySelector('.quick-actions').style.display = 'none';
+  document.querySelector('.section-title').style.display = 'none';
+  document.querySelector('.games').style.display = 'none';
+  document.querySelector('.announcement').style.display = 'none';
+  document.querySelector('.support-btn').style.display = 'none';
+
+  document.getElementById('walletScreen').style.display = 'block';
+}
+  function showDeposit() {
+  document.getElementById('depositSection').style.display = 'block';
+  document.getElementById('withdrawSection').style.display = 'none';
+
+  document.querySelector('.wallet-tabs button:nth-child(1)').classList.add('active');
+  document.querySelector('.wallet-tabs button:nth-child(2)').classList.remove('active');
+}
+
+function showWithdraw() {
+  document.getElementById('depositSection').style.display = 'none';
+  document.getElementById('withdrawSection').style.display = 'block';
+
+  document.querySelector('.wallet-tabs button:nth-child(1)').classList.remove('active');
+  document.querySelector('.wallet-tabs button:nth-child(2)').classList.add('active');
+}
+
+let selectedWithdrawMethod = 'cbeBirr';
+
+function selectWithdrawMethod(button) {
+  document.querySelectorAll('.withdraw-method').forEach(btn => {
+    btn.classList.remove('active');
+  });
+
+  button.classList.add('active');
+
+  if (button.textContent.includes('Telebirr')) {
+    selectedWithdrawMethod = 'telebirr';
+  } else if (button.textContent.trim() === 'CBE') {
+    selectedWithdrawMethod = 'cbe';
+  } else {
+    selectedWithdrawMethod = 'cbeBirr';
+  }
+}
+
+async function submitWithdrawal() {
+  const account = document.getElementById('withdrawAccount').value.trim();
+  const amount = Number(document.getElementById('withdrawAmount').value);
+
+  if (!account) {
+    alert('Please enter your account number');
+    return;
+  }
+
+  if (!amount || amount < 50) {
+    alert('Minimum withdrawal is 50 Br');
+    return;
+  }
+
+  if (amount > window.playerBalance - 50) {
+    alert('You must leave at least 50 Br in your balance');
+    return;
+  }
+
+  if (!telegramUser) {
+    alert('Telegram user not found');
+    return;
+  }
+
+  try {
+    const response = await fetch('https://za-bingo-5a7e.onrender.com/api/withdraw', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        telegramId: String(telegramUser.id),
+        amount: amount,
+        method: selectedWithdrawMethod,
+        account: account
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      alert(data.message || 'Withdrawal failed');
+      return;
+    }
+
+    window.playerBalance = Number(data.remainingBalance);
+
+    document.getElementById('withdrawAccount').value = '';
+    document.getElementById('withdrawAmount').value = '';
+
+    alert('Withdrawal submitted successfully');
+  } catch (error) {
+    console.error('Withdrawal error:', error);
+    alert('Unable to connect to server');
+  }
+}
+  
+</script>
+<script>
+  async function submitDeposit() {
+  const sms = document.getElementById('depositSms').value.trim();
+
+  if (!sms) {
+    alert('Please paste your payment SMS.');
+    return;
+  }
+
+  if (!telegramUser) {
+    alert('Telegram user not found. Please reopen the app.');
+    return;
+  }
+
+  const amountText = prompt('Enter the exact amount you deposited:');
+
+  if (!amountText) {
+    return;
+  }
+
+  const amount = Number(amountText);
+
+  if (!Number.isFinite(amount) || amount < 50) {
+    alert('Minimum deposit is 50 Br.');
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      'https://za-bingo-5a7e.onrender.com/api/deposit',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          telegramId: String(telegramUser.id),
+          amount: amount,
+          sms: sms,
+          method: 'payment'
+        })
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      alert(result.error || 'Deposit could not be verified.');
+      return;
+    }
+
+    alert(
+      `Deposit approved!\n\nAmount: ${amount.toFixed(2)} Br`
+    );
+
+    document.getElementById('depositSms').value = '';
+
+  } catch (error) {
+    console.error('Deposit error:', error);
+    alert('Unable to connect to the server. Please try again.');
+  }
+}
+function copyNumber(number) {
+  navigator.clipboard.writeText(number).then(() => {
+    alert("Number copied!");
+  }).catch(() => {
+    const input = document.createElement("input");
+    input.value = number;
+    document.body.appendChild(input);
+    input.select();
+    document.execCommand("copy");
+    input.remove();
+    alert("Number copied!");
+  });
+}
+  function openProfile() {
+  const player = window.currentPlayer || {};
+  const user = window.telegramUser || {};
+
+  alert(
+    "PROFILE\n\n" +
+    "Name: " + (player.name || user.first_name || "N/A") + "\n" +
+    "Phone: " + (player.phone || user.phone_number || "N/A") + "\n" +
+    "Player ID: " + (user.id || "N/A") + "\n" +
+    "Balance: " + Number(player.balance || 0).toFixed(2) + " Br"
+  );
+}
+</script>
+
+</body>
+</html>
