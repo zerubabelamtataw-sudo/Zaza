@@ -537,17 +537,56 @@
   color: #111;
   font-size: 14px;
   font-weight: 900;
-}  
+} 
+/* WALLET HISTORY */
+#depositHistory,
+#withdrawHistory {
+  margin-top: 10px;
+}
+
+#depositHistory h3,
+#withdrawHistory h3 {
+  margin-bottom: 6px;
+}
+
+#depositHistoryList,
+#withdrawHistoryList {
+  background: linear-gradient(145deg, #171720, #101018);
+  border-radius: 10px;
+  padding: 0 10px;
+  overflow: hidden;
+}
+
+#depositHistoryList > div,
+#withdrawHistoryList > div {
+  padding: 8px 0 !important;
+  border-bottom: 1px solid #2d2d38 !important;
+}
+
+#depositHistoryList > div:last-child,
+#withdrawHistoryList > div:last-child {
+  border-bottom: none !important;
+}
+.wallet-back-btn {
+  background: none;
+  border: none;
+  padding: 4px 0;
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #f5c842;
+}
   </style>
   <script>
 const firebaseConfig = {
-  apiKey: "AIzaSyAEDAc2nhZdNzul9NWdPo3YkCTpvJjdbWI",
-  authDomain: "zaza-99107.firebaseapp.com",
-  projectId: "zaza-99107",
-  storageBucket: "zaza-99107.firebasestorage.app",
-  messagingSenderId: "274470834531",
-  appId: "1:274470834531:web:6c219ba89f60c952724356",
-  measurementId: "G-46P4K3HG82"
+  apiKey: "AIzaSyCMfDNAWQtrJGijQLUC5KQWi5hVTgEvJTo",
+  authDomain: "zabingo-d2ed5.firebaseapp.com",
+  databaseURL: "https://zabingo-d2ed5-default-rtdb.firebaseio.com/",
+  projectId: "zabingo-d2ed5",
+  storageBucket: "zabingo-d2ed5.firebasestorage.app",
+  messagingSenderId: "75991744418",
+  appId: "1:75991744418:web:70afa1b06418ddc50ffcfb"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -565,7 +604,7 @@ const db = firebase.database();
   <div class="brand">
 
     <div class="logo">
-      እድል
+      MY
       <span>Games</span>
     </div>
 
@@ -678,7 +717,7 @@ const db = firebase.database();
 
 
       <!-- NUMBERS -->
-      <div class="game-card numbers">
+      <div class="game-card numbers" onclick="window.location.href='numbers.html'">
 
         <div class="game-icon">🔢</div>
 
@@ -718,6 +757,7 @@ const db = firebase.database();
     <!-- WALLET SCREEN -->
 <section id="walletScreen" style="display:none;">
 
+  <button class="wallet-back-btn" onclick="closeWallet()">← Back</button>
   <h2>Wallet</h2>
 
   <div class="wallet-tabs">
@@ -765,7 +805,13 @@ const db = firebase.database();
 
     <button onclick="submitDeposit()">SUBMIT</button>
 
+    <div id="depositHistory" style="margin-top:20px;">
+    <h3>Deposit History</h3>
+    <div id="depositHistoryList">
+      Loading...
+    </div>
   </div>
+</div>
 
 <div id="withdrawSection" style="display:none;">
 
@@ -811,6 +857,13 @@ const db = firebase.database();
   <button class="withdraw-submit" onclick="submitWithdrawal()">
     SUBMIT
   </button>
+
+<div id="withdrawHistory" style="margin-top:20px;">
+  <h3>Withdrawal History</h3>
+  <div id="withdrawHistoryList">
+    Loading...
+  </div>
+</div>
 
 </div>
 
@@ -869,7 +922,19 @@ window.playerBalance = balance;
   document.querySelector('.support-btn').style.display = 'none';
 
   document.getElementById('walletScreen').style.display = 'block';
+    loadDepositHistory();
 }
+function closeWallet() {
+  document.getElementById('walletScreen').style.display = 'none';
+
+  document.querySelector('.balance-card').style.display = 'block';
+  document.querySelector('.quick-actions').style.display = 'grid';
+  document.querySelector('.section-title').style.display = 'block';
+  document.querySelector('.games').style.display = 'grid';
+  document.querySelector('.announcement').style.display = 'block';
+  document.querySelector('.support-btn').style.display = 'block';
+}
+  
   function showDeposit() {
   document.getElementById('depositSection').style.display = 'block';
   document.getElementById('withdrawSection').style.display = 'none';
@@ -881,6 +946,7 @@ window.playerBalance = balance;
 function showWithdraw() {
   document.getElementById('depositSection').style.display = 'none';
   document.getElementById('withdrawSection').style.display = 'block';
+  loadWithdrawalHistory();
 
   document.querySelector('.wallet-tabs button:nth-child(1)').classList.remove('active');
   document.querySelector('.wallet-tabs button:nth-child(2)').classList.add('active');
@@ -929,7 +995,7 @@ async function submitWithdrawal() {
   }
 
   try {
-    const response = await fetch('https://zaza-production-6481.up.railway.app/api/withdraw', {
+    const response = await fetch('https://za-bingo-5a7e.onrender.com/api/withdraw', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -991,7 +1057,7 @@ async function submitWithdrawal() {
 
   try {
     const response = await fetch(
-      'https://zaza-production-6481.up.railway.app/api/withdraw',
+      'https://za-bingo-5a7e.onrender.com/api/deposit',
       {
         method: 'POST',
         headers: {
@@ -1024,6 +1090,95 @@ async function submitWithdrawal() {
     alert('Unable to connect to the server. Please try again.');
   }
 }
+  async function loadDepositHistory() {
+  if (!telegramUser) return;
+
+  const list = document.getElementById('depositHistoryList');
+  list.innerHTML = 'Loading...';
+
+  try {
+    const response = await fetch(
+      `https://za-bingo-5a7e.onrender.com/api/wallet-history/${telegramUser.id}?type=deposit`
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      list.innerHTML = 'Unable to load history.';
+      return;
+    }
+
+    if (!data.transactions.length) {
+      list.innerHTML = 'No deposit history yet.';
+      return;
+    }
+
+    list.innerHTML = data.transactions.map(tx => `
+      <div style="padding:12px 0;border-bottom:1px solid #ddd;">
+        <strong>+${Number(tx.amount).toFixed(2)} Br</strong><br>
+        <span style="
+  color: ${
+    tx.status === 'approved' ? '#22c55e' :
+    tx.status === 'pending' ? '#f5c842' :
+    tx.status === 'rejected' ? '#ef4444' :
+    '#fff'
+  };
+  font-weight: 700;
+">${tx.status}</span><br>
+        <small>${new Date(tx.createdAt).toLocaleString()}</small>
+      </div>
+    `).join('');
+
+  } catch (error) {
+    console.error('Deposit history error:', error);
+    list.innerHTML = 'Unable to load history.';
+  }
+}
+  async function loadWithdrawalHistory() {
+  if (!telegramUser) return;
+
+  const list = document.getElementById('withdrawHistoryList');
+  list.innerHTML = 'Loading...';
+
+  try {
+    const response = await fetch(
+      `https://za-bingo-5a7e.onrender.com/api/wallet-history/${telegramUser.id}?type=withdrawal`
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      list.innerHTML = 'Unable to load history.';
+      return;
+    }
+
+    if (!data.transactions.length) {
+      list.innerHTML = 'No withdrawal history yet.';
+      return;
+    }
+
+    list.innerHTML = data.transactions.map(tx => `
+      <div style="padding:12px 0;border-bottom:1px solid #ddd;">
+        <strong>-${Number(tx.amount).toFixed(2)} Br</strong><br>
+        <span style="
+  color: ${
+    tx.status === 'approved' ? '#22c55e' :
+    tx.status === 'pending' ? '#f5c842' :
+    tx.status === 'rejected' ? '#ef4444' :
+    '#fff'
+  };
+  font-weight: 700;
+">${tx.status}</span><br>
+        <small>${new Date(tx.createdAt).toLocaleString()}</small>
+      </div>
+    `).join('');
+
+  } catch (error) {
+    console.error('Withdrawal history error:', error);
+    list.innerHTML = 'Unable to load history.';
+  }
+}
+  
 function copyNumber(number) {
   navigator.clipboard.writeText(number).then(() => {
     alert("Number copied!");
